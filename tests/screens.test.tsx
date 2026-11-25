@@ -127,3 +127,30 @@ describe("Inbox screen (re-review 07 paseo N12)", () => {
     expect(row()?.props["accessibilityLabel"]).toBe("HIGH sample/r#1: Bad thing, dismissed, not current");
   });
 });
+
+describe("Inbox repo picker", () => {
+  const mk = (repo: string, n: number) => ({ id: `${repo}/r#${n}`, report: "r", n, repo, severity: "HIGH", title: `T ${repo}`, location: "", state: "new", inherited: "", verdict: "" });
+  const findings = [mk("alpha", 1), mk("beta", 1), mk("gamma", 1)];
+  const rows = () => root!.root.findAll((n: TestInstance) => n.type === "Pressable" && /#\d+:/.test(String(n.props["accessibilityLabel"])));
+  const chip = (label: string) => root!.root.findAll((n: TestInstance) => n.type === "Pressable" && n.props["accessibilityLabel"] === label)[0]!;
+  const press = (label: string) => act(async () => (chip(label).props["onPress"] as () => void)());
+  const mount = async () => {
+    await act(async () => { root = TestRenderer.create(createElement(Inbox, { theme, compact: true, onSelect: () => undefined })); });
+    await answer("fleet.findings.list", ok({ findings, skipped: 0 }));
+  };
+
+  it("defaults to all repos, filters to the chosen repos, and remembers the choice across remounts", async () => {
+    await mount();
+    expect(rows()).toHaveLength(3);
+    expect(chip("All repos").props["accessibilityState"]).toMatchObject({ selected: true });
+    await press("alpha");
+    await press("gamma");
+    expect(rows().map((r) => r.props["accessibilityLabel"] as string).every((l) => !l.includes("beta"))).toBe(true);
+    expect(rows()).toHaveLength(2);
+    await act(async () => root!.unmount());
+    await mount();
+    expect(rows()).toHaveLength(2);
+    await press("All repos");
+    expect(rows()).toHaveLength(3);
+  });
+});

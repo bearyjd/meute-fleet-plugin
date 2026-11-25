@@ -133,6 +133,9 @@ MUTANTS = [
     ("NAME_RE allows + and ~", "shared/validate.ts", "/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/", "/^[A-Za-z0-9][A-Za-z0-9._+~-]{0,127}$/"),
     ("sanitize keeps bidi isolates", "shared/validate.ts", "\\u202a-\\u202e\\u2066-\\u2069\\ufeff]/g", "\\u202a-\\u202e\\ufeff]/g"),
     # --- client view model, hook, settings
+    ("NEW repo picker ignores the selection", "client/viewmodel.ts", "!filters.repos.includes(finding.repo)", "false"),
+    ("NEW stored repo names not validated", "client/viewmodel.ts", "isSafeName(entry));\n  return [...new Set(names)]", "true);\n  return [...new Set(names)]"),
+    ("NEW picker offers unsafe repo names", "client/viewmodel.ts", ".filter((repo) => isSafeName(repo));\n}", ".filter((repo) => repo !== \"\");\n}"),
     ("NEW no stale-by-age", "client/viewmodel.ts", "const aged = baseMs !== null &&", "const aged = false && baseMs !== null &&"),
     ("NEW resume not marked stale", "client/viewmodel.ts", "if (aged || state.resumed === true) {", "if (aged) {"),
     ("NEW stale READY keeps the success colour", "client/viewmodel.ts", 'if (fresh.stale && view.tone === "success") {', "if (false) {"),

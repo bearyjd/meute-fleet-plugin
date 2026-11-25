@@ -33,7 +33,7 @@ A **Fleet** screen (sidebar item plus screen) with four sections:
 
 | Section | Source | Poll |
 |---|---|---|
-| Inbox: list with filters (state new/open/dismissed, repo, severity). A row is `repo/report#n`, title, severity, state. A list, not a table, so it works on a phone. | `meute findings --all --json` | 30 s |
+| Inbox: list with filters (state new/open/dismissed, severity) and a repo picker (one or more repos, "All repos" by default; the repos are the ones in the findings answer, i.e. the `reports/<repo>/` directories meute scanned, so a repo with no report is not listed; the choice is remembered on this client only, in memory and the host's localStorage when it has one, never sent to the daemon; names that are not plain path segments are not offered or stored). A row is `repo/report#n`, title, severity, state. A list, not a table, so it works on a phone. | `meute findings --all --json` | 30 s |
 | Finding: the report excerpt as escaped plain text | `reports/<repo>/<name>.md` read directly, never `meute show` (which marks the report read) | on open |
 | Readiness: per-check status, pending vs ready, fail-closed wording | `meute readiness validate` JSON | 60 s |
 | Health & run: healthy/unhealthy, lock holder, recent log lines, queue size | `meute health`; files `state/lock-info`, `state/log`, `state/plan-queue.json` | 60 s / 10 s |
