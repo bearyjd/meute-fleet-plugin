@@ -23,6 +23,7 @@ vi.mock("@getpaseo/plugin/client", () => ({
 }));
 
 import { Inbox } from "../client/inbox";
+import { repoSelection } from "../client/repo-selection";
 import { Readiness } from "../client/readiness";
 import { HealthAndRun } from "../client/run";
 
@@ -152,5 +153,15 @@ describe("Inbox repo picker", () => {
     expect(rows()).toHaveLength(2);
     await press("All repos");
     expect(rows()).toHaveLength(3);
+  });
+
+  it("keeps a remembered repo that is temporarily absent when another chip is toggled", async () => {
+    repoSelection.set(["alpha", "delta"]); // delta has no findings right now
+    await mount();
+    await press("gamma");
+    expect(repoSelection.get()).toEqual(["alpha", "delta", "gamma"]);
+    await press("alpha");
+    expect(repoSelection.get()).toEqual(["delta", "gamma"]);
+    repoSelection.set([]);
   });
 });

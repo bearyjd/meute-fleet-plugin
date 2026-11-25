@@ -38,5 +38,13 @@ export function createRepoSelectionStore(storage: RepoStorage | undefined) {
   };
 }
 
-const host = (globalThis as { localStorage?: RepoStorage }).localStorage;
-export const repoSelection = createRepoSelectionStore(host);
+// Reading the property can itself throw (storage blocked by the host); treat that as "no storage".
+function hostStorage(): RepoStorage | undefined {
+  try {
+    return (globalThis as { localStorage?: RepoStorage }).localStorage;
+  } catch {
+    return undefined;
+  }
+}
+
+export const repoSelection = createRepoSelectionStore(hostStorage());

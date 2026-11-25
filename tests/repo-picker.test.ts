@@ -1,5 +1,5 @@
 // Repo picker: pure selection logic and the client-side store. Repo names are untrusted text.
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { createRepoSelectionStore } from "../client/repo-selection";
 import {
   effectiveRepos, filterFindings, parseStoredRepos, pickerRepos, toggleRepo, type Filters,
@@ -86,5 +86,19 @@ describe("repo selection store", () => {
     off();
     store.set([]);
     expect(seen).toEqual([["a"]]);
+  });
+});
+
+describe("host storage lookup", () => {
+  it("importing the store survives a host whose localStorage getter throws", async () => {
+    vi.resetModules();
+    Object.defineProperty(globalThis, "localStorage", { configurable: true, get: () => { throw new Error("SecurityError"); } });
+    try {
+      const mod = await import("../client/repo-selection");
+      mod.repoSelection.set(["a"]);
+      expect(mod.repoSelection.get()).toEqual(["a"]);
+    } finally {
+      delete (globalThis as { localStorage?: unknown }).localStorage;
+    }
   });
 });

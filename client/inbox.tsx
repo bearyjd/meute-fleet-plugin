@@ -85,7 +85,7 @@ export function Inbox({ theme, compact, onSelect }: Props) {
           <Chip theme={theme} label="All repos" selected={picked.length === 0} onPress={() => repoSelection.set([])} />
           {repos.map((repo) => (
             <Chip key={repo} theme={theme} label={sanitizeText(repo, 128)} selected={picked.includes(repo)}
-              onPress={() => repoSelection.set(toggleRepo(picked, repo))} />
+              onPress={() => repoSelection.set(toggleRepo(remembered, repo))} />
           ))}
         </View>
       ) : null}
