@@ -1,14 +1,16 @@
 import type { PluginTheme } from "@getpaseo/plugin";
 import { useRpc } from "@getpaseo/plugin/client";
 import { FlatList } from "@getpaseo/plugin/client/ui";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { Pressable, Text, View } from "react-native";
 import { listFindingsRpc, type Finding } from "../shared/contracts";
+import { sanitizeText } from "../shared/validate";
 import { ActionButton, Badge, Chip, FreshnessBanner } from "./common";
+import { repoSelection } from "./repo-selection";
 import { usePolled } from "./use-polled";
 import {
-  filterFindings, findingStateGroup, freshness, repoOptions, SEVERITY_FILTERS, severityTone, sortFindings,
-  type Filters,
+  effectiveRepos, filterFindings, findingStateGroup, freshness, pickerRepos, SEVERITY_FILTERS, severityTone, sortFindings,
+  toggleRepo, type Filters,
 } from "./viewmodel";
 
 const INBOX_POLL_MS = 30_000; // findings --json parses every report, so poll gently
@@ -50,8 +52,13 @@ export function Inbox({ theme, compact, onSelect }: Props) {
   const stale = freshness(state, now, INBOX_POLL_MS).stale;
   const [filters, setFilters] = useState<Filters>({ state: "all", repo: "", severity: "" });
   const all = state.data?.findings;
-  const visible = useMemo(() => (all ? sortFindings(filterFindings(all, filters)) : []), [all, filters]);
-  const repos = useMemo(() => (all ? repoOptions(all) : []), [all]);
+  const remembered = useSyncExternalStore(repoSelection.subscribe, repoSelection.get);
+  const repos = useMemo(() => (all ? pickerRepos(all) : []), [all]);
+  const picked = useMemo(() => effectiveRepos(remembered, repos), [remembered, repos]);
+  const visible = useMemo(
+    () => (all ? sortFindings(filterFindings(all, { ...filters, repos: picked })) : []),
+    [all, filters, picked],
+  );
 
   const header = (
     <View style={{ gap: 10, paddingBottom: 8 }}>
@@ -75,9 +82,10 @@ export function Inbox({ theme, compact, onSelect }: Props) {
       </View>
       {repos.length > 0 ? (
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-          <Chip theme={theme} label="Any repo" selected={filters.repo === ""} onPress={() => setFilters({ ...filters, repo: "" })} />
+          <Chip theme={theme} label="All repos" selected={picked.length === 0} onPress={() => repoSelection.set([])} />
           {repos.map((repo) => (
-            <Chip key={repo} theme={theme} label={repo} selected={filters.repo === repo} onPress={() => setFilters({ ...filters, repo })} />
+            <Chip key={repo} theme={theme} label={sanitizeText(repo, 128)} selected={picked.includes(repo)}
+              onPress={() => repoSelection.set(toggleRepo(remembered, repo))} />
           ))}
         </View>
       ) : null}

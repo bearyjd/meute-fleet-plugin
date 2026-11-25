@@ -2,6 +2,7 @@
 import type {
   ApiError, Finding, HealthData, LogEntry, ReadinessData, RunStatusData,
 } from "../shared/contracts";
+import { isSafeName } from "../shared/validate";
 
 export type Tone = "success" | "warning" | "danger" | "muted";
 
@@ -27,6 +28,8 @@ export function findingStateGroup(state: string): StateGroup {
 export interface Filters {
   readonly state: "all" | "new" | "open" | "dismissed";
   readonly repo: string;
+  /** Repo picker: empty or absent means every repo. */
+  readonly repos?: readonly string[];
   readonly severity: string;
 }
 
@@ -43,6 +46,7 @@ export function filterFindings(findings: readonly Finding[], filters: Filters): 
     if (filters.state === "open" && group !== "new" && group !== "open") return false;
     if (filters.state === "dismissed" && group !== "dismissed") return false;
     if (filters.repo !== "" && finding.repo !== filters.repo) return false;
+    if (filters.repos !== undefined && filters.repos.length > 0 && !filters.repos.includes(finding.repo)) return false;
     if (filters.severity !== "" && finding.severity !== filters.severity) return false;
     return true;
   });
@@ -50,6 +54,37 @@ export function filterFindings(findings: readonly Finding[], filters: Filters): 
 
 export function repoOptions(findings: readonly Finding[]): string[] {
   return [...new Set(findings.map((finding) => finding.repo))].sort();
+}
+
+export const MAX_PICKED_REPOS = 64;
+const MAX_STORED_REPOS_CHARS = 8192;
+
+/** Picker options: each repo once, sorted, and only names that are safe path segments. */
+export function pickerRepos(findings: readonly Finding[]): string[] {
+  return repoOptions(findings).filter((repo) => isSafeName(repo));
+}
+
+export function toggleRepo(selected: readonly string[], repo: string): string[] {
+  return selected.includes(repo) ? selected.filter((entry) => entry !== repo) : [...selected, repo];
+}
+
+/** A remembered choice may name repos that no longer exist; those are ignored (empty means all). */
+export function effectiveRepos(selected: readonly string[], available: readonly string[]): string[] {
+  return selected.filter((repo) => available.includes(repo));
+}
+
+/** Stored text is untrusted: only a bounded JSON array of safe, unique names is accepted. */
+export function parseStoredRepos(raw: string | null): string[] {
+  if (raw === null || raw.length > MAX_STORED_REPOS_CHARS) return [];
+  let value: unknown;
+  try {
+    value = JSON.parse(raw);
+  } catch {
+    return [];
+  }
+  if (!Array.isArray(value)) return [];
+  const names = value.filter((entry): entry is string => isSafeName(entry));
+  return [...new Set(names)].sort().slice(0, MAX_PICKED_REPOS);
 }
 
 export const SEVERITY_FILTERS = SEVERITY_ORDER;
