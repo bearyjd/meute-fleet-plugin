@@ -1,0 +1,6 @@
+{
+  "id": "meute-fleet",
+  "name": "Meute Fleet",
+  "description": "Read-only operator view of a local Meute fleet: findings inbox, readiness, health and run status.",
+  "requirements": { "paseo": ">=0.17.0 <0.18.0" }
+}

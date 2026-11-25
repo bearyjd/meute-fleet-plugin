@@ -1,0 +1,135 @@
+{
+ "version": 1,
+ "checks": [
+  {
+   "check": "input",
+   "status": "passed",
+   "reason": "input_valid"
+  },
+  {
+   "check": "policy",
+   "status": "passed",
+   "reason": "policy_bindings_match"
+  },
+  {
+   "check": "enrollment",
+   "status": "passed",
+   "reason": "enrollment_matches"
+  },
+  {
+   "check": "ref",
+   "status": "passed",
+   "reason": "ref_matches",
+   "ref": "refs/heads/topic",
+   "expected_commit": "5139021dbaf4dcb86d64a18a22af48f7b52889eb",
+   "observed_commit": "5139021dbaf4dcb86d64a18a22af48f7b52889eb"
+  },
+  {
+   "check": "inventory",
+   "status": "passed",
+   "reason": "inventory_matches",
+   "reports": 1
+  },
+  {
+   "check": "findings",
+   "status": "passed",
+   "reason": "findings_resolved",
+   "count": 1,
+   "hidden": 0
+  },
+  {
+   "check": "assessment",
+   "status": "passed",
+   "reason": "assessment_complete"
+  },
+  {
+   "check": "evidence",
+   "purpose": "docs",
+   "status": "passed",
+   "reason": "evidence_passed",
+   "references": [
+    {
+     "ref": "docs.json",
+     "reason": "evidence_passed"
+    }
+   ]
+  },
+  {
+   "check": "evidence",
+   "purpose": "codemap",
+   "status": "passed",
+   "reason": "evidence_passed",
+   "references": [
+    {
+     "ref": "codemap.json",
+     "reason": "evidence_passed"
+    }
+   ]
+  },
+  {
+   "check": "evidence",
+   "purpose": "baseline",
+   "status": "passed",
+   "reason": "evidence_passed",
+   "references": [
+    {
+     "ref": "baseline.json",
+     "reason": "evidence_passed"
+    }
+   ]
+  },
+  {
+   "check": "evidence",
+   "purpose": "acceptance",
+   "status": "passed",
+   "reason": "evidence_passed",
+   "references": [
+    {
+     "ref": "acceptance.json",
+     "reason": "evidence_passed"
+    }
+   ]
+  },
+  {
+   "check": "evidence",
+   "purpose": "audits",
+   "status": "passed",
+   "reason": "evidence_passed",
+   "references": [
+    {
+     "ref": "audits.json",
+     "reason": "evidence_passed"
+    }
+   ]
+  },
+  {
+   "check": "blockers",
+   "status": "passed",
+   "reason": "blockers_clear"
+  },
+  {
+   "check": "commands",
+   "status": "passed",
+   "reason": "commands_not_executed",
+   "commands": []
+  },
+  {
+   "check": "recheck",
+   "status": "passed",
+   "reason": "inputs_unchanged"
+  },
+  {
+   "check": "expiry",
+   "status": "passed",
+   "reason": "deferrals_current"
+  }
+ ],
+ "scope": {
+  "repo": "sample",
+  "slice_id": "one-feature",
+  "plan_revision": "plan/v1",
+  "intent_ref": "planning/0001"
+ },
+ "status": "ready",
+ "observed_at": "2026-11-25T04:58:20.999095+00:00"
+}

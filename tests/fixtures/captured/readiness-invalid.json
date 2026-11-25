@@ -1,0 +1,13 @@
+{
+ "version": 1,
+ "checks": [
+  {
+   "check": "input",
+   "status": "invalid",
+   "reason": "policy_unreadable",
+   "detail": "[Errno 2] No such file or directory: '/tmp/tmpalp7flte/nope.json'"
+  }
+ ],
+ "status": "invalid",
+ "observed_at": "2026-11-25T04:58:20.727100+00:00"
+}

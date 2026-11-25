@@ -1,0 +1,2 @@
+no run logged for 1321h (twice the daily cadence is 48h): the fleet has stopped firing
+no successful run for 55d: every fire since has skipped or failed (see: meute status)

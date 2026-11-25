@@ -1,0 +1,36 @@
+{
+  "name": "meute-fleet",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "version": "0.0.0",
+  "files": [
+    "LICENSE",
+    "paseo-plugin.json",
+    "OVERVIEW.md",
+    "index.client.tsx",
+    "index.server.ts",
+    "client/",
+    "server/",
+    "shared/"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@getpaseo/plugin": "0.17.4",
+    "@tanstack/react-query": "^5.90.11",
+    "@types/node": "^22.0.0",
+    "@types/react": "~19.2.0",
+    "eslint": "^9.0.0",
+    "react": "19.1.0",
+    "react-native": "0.81.5",
+    "react-test-renderer": "^19.1.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.0.0",
+    "vitest": "^3.0.0",
+    "zod": "^4.4.3"
+  }
+}

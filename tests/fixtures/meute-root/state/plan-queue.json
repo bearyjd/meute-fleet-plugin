@@ -1,0 +1,4 @@
+{"version": 1, "scan": "/home/op/code", "allow_web": false, "entries": [
+ {"name": "sample", "path": "/home/op/code/sample", "task": "audit", "spec": "tasks/audit.md"},
+ {"name": "other", "path": "/home/op/code/other", "task": "docs", "spec": "tasks/docs.md"}
+]}
